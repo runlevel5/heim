@@ -30,7 +30,7 @@ impl Nic {
         unimplemented!()
     }
 
-    pub fn is_runnning(&self) -> bool {
+    pub fn is_running(&self) -> bool {
         unimplemented!()
     }
 
