@@ -63,14 +63,13 @@ impl Nic {
 }
 
 pub async fn nic() -> Result<impl Stream<Item = Result<Nic>>> {
-    let iter = ifaddrs::getifaddrs()?
-        .filter_map(|addr| {
-            if addr.address.is_some() {
-                Some(Ok(Nic(addr)))
-            } else {
-                None
-            }
-        });
+    let iter = ifaddrs::getifaddrs()?.filter_map(|addr| {
+        if addr.address.is_some() {
+            Some(Ok(Nic(addr)))
+        } else {
+            None
+        }
+    });
 
     Ok(stream::iter(iter))
 }
@@ -80,11 +79,9 @@ impl From<&socket::SockAddr> for Address {
         use nix::sys::socket::SockAddr::*;
 
         match *s {
-            Inet(addr) => {
-                match addr.to_std() {
-                    SocketAddr::V4(addr) => Address::Inet(addr),
-                    SocketAddr::V6(addr) => Address::Inet6(addr),
-                }
+            Inet(addr) => match addr.to_std() {
+                SocketAddr::V4(addr) => Address::Inet(addr),
+                SocketAddr::V6(addr) => Address::Inet6(addr),
             },
             Link(addr) => Address::Link(MacAddr::from(addr.addr())),
             other => unimplemented!("Unknown sockaddr: {:?}", other),
