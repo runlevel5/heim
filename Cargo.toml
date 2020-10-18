@@ -35,6 +35,3 @@ members = [
     "benchmarks",
     "examples",
 ]
-
-[patch.crates-io]
-uom = { git = "https://github.com/iliekturtles/uom.git", branch = "trait-bounds" }
